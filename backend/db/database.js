@@ -12,31 +12,43 @@ let pool;
 async function initDb() {
   if (pool) return pool;
 
-  // Create connection to create database if it doesn't exist
-  const initConnection = await mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    timezone: 'Z'
-  });
+  if (process.env.DATABASE_URL) {
+    pool = mysql.createPool({
+      uri: process.env.DATABASE_URL,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      multipleStatements: true,
+      timezone: 'Z',
+      ssl: { rejectUnauthorized: true } // Required for TiDB Serverless
+    });
+  } else {
+    // Local fallback
+    const initConnection = await mysql.createConnection({
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 3306,
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASSWORD || '',
+      timezone: 'Z'
+    });
 
-  const dbName = process.env.DB_NAME || 'calendly';
-  await initConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
-  await initConnection.end();
+    const dbName = process.env.DB_NAME || 'calendly';
+    await initConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
+    await initConnection.end();
 
-  pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: dbName,
-    timezone: 'Z',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-    multipleStatements: true // Allow running schema.sql
-  });
+    pool = mysql.createPool({
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 3306,
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: dbName,
+      timezone: 'Z',
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      multipleStatements: true
+    });
+  }
 
   // Run schema
   const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
