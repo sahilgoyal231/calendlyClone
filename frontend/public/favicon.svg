@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <g fill="none" fill-rule="evenodd">
+    <rect width="42" height="38" x="3" y="7" fill="#0069ff" rx="4"/>
+    <path fill="#ffffff" d="M3 18h42v23a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V18z"/>
+    <rect width="6" height="10" x="12" y="2" fill="#0046aa" rx="3"/>
+    <rect width="6" height="10" x="30" y="2" fill="#0046aa" rx="3"/>
+    <circle cx="15" cy="27" r="3" fill="#0069ff"/>
+    <circle cx="24" cy="27" r="3" fill="#0069ff"/>
+    <circle cx="33" cy="27" r="3" fill="#0069ff"/>
+    <circle cx="15" cy="36" r="3" fill="#0069ff"/>
+    <circle cx="24" cy="36" r="3" fill="#0069ff"/>
+    <circle cx="33" cy="36" r="3" fill="#0069ff"/>
+  </g>
+</svg>
